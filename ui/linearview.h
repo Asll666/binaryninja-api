@@ -289,7 +289,7 @@ public:
 	virtual uint64_t getCurrentOffset() override;
 	virtual UIActionContext actionContext() override;
 	virtual BNAddressRange getSelectionOffsets() override;
-	virtual BNAddressRange getSelectionForInfo() override;
+	virtual SelectionInfoForXref getSelectionForXref() override;
 	virtual void setSelectionOffsets(BNAddressRange range) override;
 	virtual FunctionRef getCurrentFunction() override;
 	virtual BasicBlockRef getCurrentBasicBlock() override;

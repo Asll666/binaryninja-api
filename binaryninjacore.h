@@ -3241,6 +3241,13 @@ __attribute__ ((format (printf, 1, 2)))
 	BINARYNINJACOREAPI void BNRemoveUserDataReference(BNBinaryView* view, uint64_t fromAddr, uint64_t toAddr);
 	BINARYNINJACOREAPI void BNFreeDataReferences(uint64_t* refs);
 
+	BINARYNINJACOREAPI BNReferenceSource* BNGetCodeReferencesForType(BNBinaryView* view, BNQualifiedName* type, size_t* count);
+	BINARYNINJACOREAPI uint64_t* BNGetDataReferencesForType(BNBinaryView* view, BNQualifiedName* type, size_t* count);
+	BINARYNINJACOREAPI BNReferenceSource* BNGetCodeReferencesForTypeField(BNBinaryView* view,
+		BNQualifiedName* type, uint64_t offset, size_t* count);
+	BINARYNINJACOREAPI uint64_t* BNGetDataReferencesForTypeField(BNBinaryView* view,
+		BNQualifiedName* type, uint64_t offset, size_t* count);
+
 	BINARYNINJACOREAPI void BNRegisterGlobalFunctionRecognizer(BNFunctionRecognizer* rec);
 
 	BINARYNINJACOREAPI bool BNGetStringAtAddress(BNBinaryView* view, uint64_t addr, BNStringReference* strRef);

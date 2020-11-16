@@ -1586,6 +1586,13 @@ __attribute__ ((format (printf, 1, 2)))
 		std::vector<uint64_t> GetDataReferencesFrom(uint64_t addr, uint64_t len);
 		void AddUserDataReference(uint64_t fromAddr, uint64_t toAddr);
 		void RemoveUserDataReference(uint64_t fromAddr, uint64_t toAddr);
+		
+		std::vector<ReferenceSource> GetCodeReferencesForType(const QualifiedName& type);
+		std::vector<uint64_t> GetDataReferencesForType(const QualifiedName& type);
+		std::vector<ReferenceSource> GetCodeReferencesForTypeField(const QualifiedName& type, uint64_t offset);
+		std::vector<uint64_t> GetDataReferencesForTypeField(const QualifiedName& type, uint64_t uint64_t);
+
+		// TODO: GetTypeReferencesFrom, etc
 
 		std::vector<uint64_t> GetCallees(ReferenceSource addr);
 		std::vector<ReferenceSource> GetCallers(uint64_t addr);

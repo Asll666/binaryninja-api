@@ -14,6 +14,22 @@
 #include "viewtype.h"
 #include "action.h"
 
+// this struct is used to pass selection information for cross references
+struct SelectionInfoForXref
+{
+	// check these booleans before accessing the address/type info,
+	// since the invalid fields are not guaranteed to be initialized/zero-ed
+	bool addrValid, typeValid, typeFieldValid;
+
+	uint64_t start;
+	uint64_t end;
+
+	BinaryNinja::QualifiedName type;
+	// the current selection can be either a named field, or an unnamed offset
+	uint64_t offset;
+	// this is likely to be useless eventually
+	size_t fieldIndex;
+};
 
 class BINARYNINJAUIAPI HistoryEntry: public BinaryNinja::RefCountObject
 {
@@ -74,7 +90,7 @@ public:
 	virtual BinaryViewRef getData() = 0;
 	virtual uint64_t getCurrentOffset() = 0;
 	virtual BNAddressRange getSelectionOffsets();
-	virtual BNAddressRange getSelectionForInfo();
+	virtual SelectionInfoForXref getSelectionForXref();
 	virtual void setSelectionOffsets(BNAddressRange range) = 0;
 	virtual bool navigate(uint64_t offset) = 0;
 	virtual bool navigateToFunction(FunctionRef func, uint64_t offset);

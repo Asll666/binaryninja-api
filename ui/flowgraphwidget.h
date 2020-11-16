@@ -211,7 +211,7 @@ public:
 	virtual BinaryViewRef getData() override { return m_data; }
 	virtual uint64_t getCurrentOffset() override;
 	virtual BNAddressRange getSelectionOffsets() override;
-	virtual BNAddressRange getSelectionForInfo() override;
+	virtual SelectionInfoForXref getSelectionForXref() override;
 	virtual void setSelectionOffsets(BNAddressRange range) override;
 	virtual bool navigate(uint64_t pos) override;
 	virtual bool navigateToFunction(FunctionRef func, uint64_t pos) override;

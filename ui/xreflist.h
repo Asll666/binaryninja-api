@@ -41,7 +41,8 @@ public:
 	{
 		DataXrefType,
 		CodeXrefType,
-		VariableXrefType
+		VariableXrefType,
+		TypeXrefType
 	};
 
 protected:
@@ -404,8 +405,8 @@ public:
 	virtual void notifyFontChanged() override;
 	virtual bool shouldBeVisible(ViewFrame* frame) override;
 
-	virtual void setCurrentSelection(uint64_t begin, uint64_t end);
-	virtual void setCurrentPinnedSelection(uint64_t begin, uint64_t end);
+	virtual void setCurrentSelection(SelectionInfoForXref selectionInfo);
+	virtual void setCurrentPinnedSelection(SelectionInfoForXref selectionInfo);
 	void updatePinnedSelection();
 	virtual void navigateToNext();
 	virtual void navigateToPrev();
