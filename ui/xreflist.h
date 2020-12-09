@@ -28,6 +28,8 @@
 #include "fontsettings.h"
 
 class XrefHeader;
+struct TypeField;
+
 class XrefItem
 {
 public:
@@ -41,7 +43,7 @@ public:
 	{
 		DataXrefType,
 		CodeXrefType,
-		VariableXrefType,
+		// VariableXrefType,
 		TypeXrefType
 	};
 
@@ -49,6 +51,7 @@ protected:
 	FunctionRef m_func;
 	ArchitectureRef m_arch;
 	uint64_t m_addr;
+	BinaryNinja::QualifiedName m_typeName;
 	XrefType m_type;
 	XrefDirection m_direction;
 	mutable XrefHeader* m_parentItem;
@@ -66,6 +69,7 @@ public:
 	const FunctionRef& func() const { return m_func; }
 	const ArchitectureRef& arch() const { return m_arch; }
 	uint64_t addr() const { return m_addr; }
+	BinaryNinja::QualifiedName typeName() const { return m_typeName; }
 	XrefType type() const { return m_type; }
 	int size() const { return m_size; }
 	void setSize(int size) const { m_size = size; }
@@ -114,6 +118,21 @@ public:
 };
 
 
+class XrefTypeHeader : public XrefHeader
+{
+	std::deque<XrefItem*> m_refs;
+public:
+	XrefTypeHeader();
+	XrefTypeHeader(BinaryNinja::QualifiedName name, XrefHeader* parent, XrefItem* child);
+	XrefTypeHeader(const XrefTypeHeader& header);
+	virtual int childCount() const override { return (int)m_refs.size(); }
+	// virtual uint64_t addr() const { return m_func->GetStart(); }
+	virtual void appendChild(XrefItem* ref) override;
+	virtual int row(const XrefItem* item) const override;
+	virtual XrefItem* child(int i) const override;
+};
+
+
 class XrefCodeReferences: public XrefHeader
 {
 	std::map<FunctionRef, XrefFunctionHeader*> m_refs;
@@ -137,6 +156,21 @@ public:
 	virtual ~XrefDataReferences();
 	virtual int childCount() const override { return (int)m_refs.size(); };
 	virtual void appendChild(XrefItem* ref) override;
+	virtual int row(const XrefItem* item) const override;
+	virtual XrefItem* child(int i) const override;
+};
+
+
+class XrefTypeReferences: public XrefHeader
+{
+	std::map<BinaryNinja::QualifiedName, XrefTypeHeader*> m_refs;
+	std::deque<XrefTypeHeader*> m_refList;
+public:
+	XrefTypeReferences(XrefHeader* parent);
+	virtual ~XrefTypeReferences();
+	virtual int childCount() const override { return (int)m_refs.size(); };
+	virtual void appendChild(XrefItem* ref) override;
+	XrefHeader* parentOf(XrefItem* ref) const;
 	virtual int row(const XrefItem* item) const override;
 	virtual XrefItem* child(int i) const override;
 };

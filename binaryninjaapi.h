@@ -1167,6 +1167,8 @@ __attribute__ ((format (printf, 1, 2)))
 		Ref<Function> func;
 		Ref<Architecture> arch;
 		uint64_t addr;
+		QualifiedName typeName;
+		uint64_t offset;
 	};
 
 	struct InstructionTextToken
