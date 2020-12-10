@@ -1068,6 +1068,7 @@ __attribute__ ((format (printf, 1, 2)))
 		virtual bool operator==(const NameList& other) const;
 		virtual bool operator!=(const NameList& other) const;
 		virtual bool operator<(const NameList& other) const;
+		virtual bool operator>(const NameList& other) const;
 
 		virtual NameList operator+(const NameList& other) const;
 
@@ -1162,11 +1163,40 @@ __attribute__ ((format (printf, 1, 2)))
 		static Ref<Symbol> ImportedFunctionFromImportAddressSymbol(Symbol* sym, uint64_t addr);
 	};
 
+	struct TypeField
+	{
+		QualifiedName name;
+		uint64_t offset;
+
+		bool operator== (TypeField other) const { return (name == other.name) && (offset == other.offset);}
+		bool operator!= (TypeField other) const { return !operator==(other);}
+		bool operator< (TypeField other) const
+		{
+			if (name < other.name)
+				return true;
+			if (name == other.name)
+				return offset < other.offset;
+			return false;
+		}
+	};
+
+	// // Maybe this should be merged with enum XrefType
+	// enum ReferenceSourceType
+	// {
+	// 	DataReferenceSourceType,
+	// 	CodeReferenceSourceType,
+	// 	// VariableXrefType,
+	// 	TypeReferenceSourceType
+	// };
+
 	struct ReferenceSource
 	{
+		// ReferenceSourceType type;
 		Ref<Function> func;
 		Ref<Architecture> arch;
+		// addr is used by both code/data references
 		uint64_t addr;
+		// For type references
 		QualifiedName typeName;
 		uint64_t offset;
 	};
@@ -1588,11 +1618,15 @@ __attribute__ ((format (printf, 1, 2)))
 		std::vector<uint64_t> GetDataReferencesFrom(uint64_t addr, uint64_t len);
 		void AddUserDataReference(uint64_t fromAddr, uint64_t toAddr);
 		void RemoveUserDataReference(uint64_t fromAddr, uint64_t toAddr);
-		
+
+		// References to type 
 		std::vector<ReferenceSource> GetCodeReferencesForType(const QualifiedName& type);
 		std::vector<uint64_t> GetDataReferencesForType(const QualifiedName& type);
+		std::vector<TypeField> GetTypeReferencesForType(const QualifiedName& type);
+		// References to type field
 		std::vector<ReferenceSource> GetCodeReferencesForTypeField(const QualifiedName& type, uint64_t offset);
-		std::vector<uint64_t> GetDataReferencesForTypeField(const QualifiedName& type, uint64_t uint64_t);
+		std::vector<uint64_t> GetDataReferencesForTypeField(const QualifiedName& type, uint64_t offset);
+		std::vector<TypeField> GetTypeReferencesForTypeField(const QualifiedName& type, uint64_t offset);
 
 		// TODO: GetTypeReferencesFrom, etc
 
@@ -2615,6 +2649,9 @@ __attribute__ ((format (printf, 1, 2)))
 		Ref<Type> WithReplacedStructure(Structure* from, Structure* to);
 		Ref<Type> WithReplacedEnumeration(Enumeration* from, Enumeration* to);
 		Ref<Type> WithReplacedNamedTypeReference(NamedTypeReference* from, NamedTypeReference* to);
+
+		bool AddTypeMemberTokens(BinaryView* data, std::vector<InstructionTextToken>& tokens, int64_t offset,
+			std::vector<std::string>& nameList, size_t size = 0, bool indirect = false);
 	};
 
 	class TypeBuilder

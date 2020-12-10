@@ -28,7 +28,6 @@
 #include "fontsettings.h"
 
 class XrefHeader;
-struct TypeField;
 
 class XrefItem
 {
@@ -43,8 +42,8 @@ public:
 	{
 		DataXrefType,
 		CodeXrefType,
-		// VariableXrefType,
 		TypeXrefType
+		// VariableXrefType,
 	};
 
 protected:
@@ -52,6 +51,7 @@ protected:
 	ArchitectureRef m_arch;
 	uint64_t m_addr;
 	BinaryNinja::QualifiedName m_typeName;
+	uint64_t m_offset;
 	XrefType m_type;
 	XrefDirection m_direction;
 	mutable XrefHeader* m_parentItem;
@@ -70,6 +70,7 @@ public:
 	const ArchitectureRef& arch() const { return m_arch; }
 	uint64_t addr() const { return m_addr; }
 	BinaryNinja::QualifiedName typeName() const { return m_typeName; }
+	uint64_t offset() const { return m_offset; }
 	XrefType type() const { return m_type; }
 	int size() const { return m_size; }
 	void setSize(int size) const { m_size = size; }

@@ -1697,6 +1697,12 @@ extern "C"
 		uint64_t addr;
 	};
 
+	struct BNTypeField
+	{
+		BNQualifiedName name;
+		uint64_t offset;
+	};
+
 	enum BNTagTypeType
 	{
 		UserTagType,
@@ -3241,11 +3247,19 @@ __attribute__ ((format (printf, 1, 2)))
 	BINARYNINJACOREAPI void BNRemoveUserDataReference(BNBinaryView* view, uint64_t fromAddr, uint64_t toAddr);
 	BINARYNINJACOREAPI void BNFreeDataReferences(uint64_t* refs);
 
+	BINARYNINJACOREAPI void BNFreeTypeReferences(BNTypeField* refs, size_t count);
+
+	// References to type
 	BINARYNINJACOREAPI BNReferenceSource* BNGetCodeReferencesForType(BNBinaryView* view, BNQualifiedName* type, size_t* count);
 	BINARYNINJACOREAPI uint64_t* BNGetDataReferencesForType(BNBinaryView* view, BNQualifiedName* type, size_t* count);
+	BINARYNINJACOREAPI BNTypeField* BNGetTypeReferencesForType(BNBinaryView* view, BNQualifiedName* type, size_t* count);
+
+	// References to type field
 	BINARYNINJACOREAPI BNReferenceSource* BNGetCodeReferencesForTypeField(BNBinaryView* view,
 		BNQualifiedName* type, uint64_t offset, size_t* count);
 	BINARYNINJACOREAPI uint64_t* BNGetDataReferencesForTypeField(BNBinaryView* view,
+		BNQualifiedName* type, uint64_t offset, size_t* count);
+	BINARYNINJACOREAPI BNTypeField* BNGetTypeReferencesForTypeField(BNBinaryView* view,
 		BNQualifiedName* type, uint64_t offset, size_t* count);
 
 	BINARYNINJACOREAPI void BNRegisterGlobalFunctionRecognizer(BNFunctionRecognizer* rec);
@@ -4199,6 +4213,9 @@ __attribute__ ((format (printf, 1, 2)))
 	BINARYNINJACOREAPI BNType* BNTypeWithReplacedStructure(BNType* type, BNStructure* from, BNStructure* to);
 	BINARYNINJACOREAPI BNType* BNTypeWithReplacedEnumeration(BNType* type, BNEnumeration* from, BNEnumeration* to);
 	BINARYNINJACOREAPI BNType* BNTypeWithReplacedNamedTypeReference(BNType* type, BNNamedTypeReference* from, BNNamedTypeReference* to);
+
+	BINARYNINJACOREAPI bool BNAddTypeMemberTokens(BNType* type, BNBinaryView* data, BNInstructionTextToken** tokens, size_t* tokenCount, 
+		int64_t offset, char** nameList, size_t* nameCount, size_t size, bool indirect);
 
 	BINARYNINJACOREAPI BNQualifiedName BNTypeBuilderGetTypeName(BNTypeBuilder* nt);
 	BINARYNINJACOREAPI void BNTypeBuilderSetTypeName(BNTypeBuilder* type, BNQualifiedName* name);
