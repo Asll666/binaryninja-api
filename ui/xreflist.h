@@ -314,7 +314,7 @@ public:
 	CrossReferenceContainer(CrossReferenceWidget* parent, ViewFrame* view, BinaryViewRef data);
 	virtual ~CrossReferenceContainer() {}
 	virtual QModelIndex translateIndex(const QModelIndex& idx) const = 0;
-	virtual bool getReference(const QModelIndex& idx, FunctionRef& func, uint64_t& addr) const = 0;
+	virtual bool getReference(const QModelIndex& idx, XrefItem** refPtr) const = 0;
 	virtual QModelIndex nextIndex() = 0;
 	virtual QModelIndex prevIndex() = 0;
 	virtual QModelIndexList selectedRows() const = 0;
@@ -336,7 +336,7 @@ class BINARYNINJAUIAPI CrossReferenceTree: public QTreeView, public CrossReferen
 
 protected:
 	void drawBranches(QPainter *painter, const QRect &rect, const QModelIndex &index) const override;
-	virtual bool getReference(const QModelIndex& idx, FunctionRef& func, uint64_t& addr) const override;
+	virtual bool getReference(const QModelIndex& idx, XrefItem** refPtr) const override;
 
 public:
 	CrossReferenceTree(CrossReferenceWidget* parent, ViewFrame* view, BinaryViewRef data);
@@ -384,7 +384,7 @@ public:
 	virtual QModelIndex prevIndex() override;
 	virtual bool hasSelection() const override { return selectionModel()->selectedRows().size() != 0; }
 	virtual QModelIndexList selectedRows() const override { return selectionModel()->selectedRows(); }
-	virtual bool getReference(const QModelIndex& idx, FunctionRef& func, uint64_t& addr) const override;
+	virtual bool getReference(const QModelIndex& idx, XrefItem** refPtr) const override;
 	virtual void mouseMoveEvent(QMouseEvent* e) override;
 	virtual void mousePressEvent(QMouseEvent* e) override;
 	virtual void keyPressEvent(QKeyEvent* e) override;

@@ -166,6 +166,7 @@ public:
 	virtual std::vector<std::string> getNavigationModes() override;
 
 	bool navigateToType(const std::string& name);
+	bool navigateToTypeField(const std::string& name, uint64_t offset);
 
 	virtual void OnTypeDefined(BinaryNinja::BinaryView* view, const BinaryNinja::QualifiedName& name,
 		BinaryNinja::Type* type) override;

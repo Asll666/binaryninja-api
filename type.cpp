@@ -977,10 +977,11 @@ bool Type::AddTypeMemberTokens(BinaryView* data, vector<InstructionTextToken>& t
 	size_t nameCount;
 	char** names = nullptr;
 
-	if (!BNAddTypeMemberTokens(m_object, data->GetObject(), &list, &tokenCount, offset, names, &nameCount, size, indirect))
+	if (!BNAddTypeMemberTokens(m_object, data->GetObject(), &list, &tokenCount, offset, &names, &nameCount, size, indirect))
 		return false;
 
-	tokens = InstructionTextToken::ConvertAndFreeInstructionTextTokenList(list, tokenCount);
+	vector<InstructionTextToken> newTokens = InstructionTextToken::ConvertAndFreeInstructionTextTokenList(list, tokenCount);
+	tokens.insert(tokens.end(), newTokens.begin(), newTokens.end());
 
 	nameList.clear();
 	nameList.reserve(nameCount);
