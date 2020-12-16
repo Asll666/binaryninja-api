@@ -1180,7 +1180,29 @@ __attribute__ ((format (printf, 1, 2)))
 		}
 	};
 
+	// This describes how the xref source references the target
+	enum ReferenceType : uint64_t
+	{
+		UnspecifiedReference			= 0x0,
+		ReadReference					= 0x1,
+		WriteReference					= 0x2,
+		ExecuteReference				= 0x4,
+
+		// A type is referenced by a data variable
+		DataVariableReference			= 0x8,
+		// A type is referenced by another type
+		TypeReference					= 0x10
+	};
+
+	// enum ReferenceNature
+	// {
+	// 	DirectReference,
+	// 	IndirectReference
+	// };
+
 	// // Maybe this should be merged with enum XrefType
+	// // In the current implementation, we do not really need it.
+	// // But it might worth being added in the future.
 	// enum ReferenceSourceType
 	// {
 	// 	DataReferenceSourceType,
@@ -1199,6 +1221,9 @@ __attribute__ ((format (printf, 1, 2)))
 		// For type references
 		QualifiedName typeName;
 		uint64_t offset;
+		ReferenceType refType;
+
+		// It would be better that we have explicit constructors for it
 	};
 
 	struct InstructionTextToken
